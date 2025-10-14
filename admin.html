@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin - Alma Obrador</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2c1810;
+            --secondary: #5c4033;
+            --accent: #8b6f47;
+            --light: #faf8f5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .admin-header h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .btn-logout {
+            padding: 0.75rem 1.5rem;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #dc2626;
+        }
+
+        .admin-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .menu-section {
+            margin-bottom: 3rem;
+        }
+
+        .menu-section h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .menu-items-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .menu-item-edit {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .menu-item-edit input {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-save {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #059669;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+
+        .btn-add {
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-add:hover {
+            background: #6d5535;
+        }
+
+        .save-all-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 2rem;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .save-all-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .success-toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 2000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-item-edit {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box">
+            <h1>🔐 Panel Admin</h1>
+            <h2 style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem; color: var(--secondary);">Alma Obrador</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" placeholder="Ingresa tu contraseña" required>
+                </div>
+                <button type="submit" class="btn">Iniciar Sesión</button>
+            </form>
+            <p class="error-message" id="errorMessage">❌ Contraseña incorrecta</p>
+            <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--secondary);">
+                ¿Olvidaste tu contraseña? Contacta al administrador.
+            </p>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h1>Panel de Administración - Alma Obrador</h1>
+            <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+        </div>
+
+        <div class="admin-content">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('cafe')">☕ Cafetería</div>
+                <div class="tab" onclick="switchTab('panaderia')">🥐 Panadería</div>
+                <div class="tab" onclick="switchTab('temporada')">🍂 Temporada</div>
+                <div class="tab" onclick="switchTab('sandwich')">🥪 Sandwich</div>
+            </div>
+
+            <!-- Café Tab -->
+            <div class="tab-content active" id="cafe-tab">
+                <div class="menu-section">
+                    <h3>Clásicos</h3>
+                    <div class="menu-items-grid" id="cafe-clasicos-edit"></div>
+                </div>
+                <div class="menu-section">
+                    <h3>Sin Café</h3>
+                    <div class="menu-items-grid" id="sin-cafe-edit"></div>
+                </div>
+                <div class="menu-section">
+                    <h3>De Temporada</h3>
+                    <div class="menu-items-grid" id="temporada-cafe-edit"></div>
+                </div>
+                <div class="menu-section">
+                    <h3>Extras</h3>
+                    <div class="menu-items-grid" id="extras-edit"></div>
+                </div>
+            </div>
+
+            <!-- Panadería Tab -->
+            <div class="tab-content" id="panaderia-tab">
+                <div class="menu-section">
+                    <h3>Panadería y Repostería</h3>
+                    <div class="menu-items-grid" id="panaderia-edit"></div>
+                </div>
+            </div>
+
+            <!-- Temporada Tab -->
+            <div class="tab-content" id="temporada-tab">
+                <div class="menu-section">
+                    <h3>Productos de Temporada</h3>
+                    <div class="menu-items-grid" id="temporada-edit"></div>
+                </div>
+            </div>
+
+            <!-- Sandwich Tab -->
+            <div class="tab-content" id="sandwich-tab">
+                <div class="menu-section">
+                    <h3>Sandwich del Día</h3>
+                    <div class="menu-items-grid" id="sandwich-edit"></div>
+                </div>
+            </div>
+        </div>
+
+        <button class="save-all-btn" onclick="saveAllChanges()">💾 Guardar Todos los Cambios</button>
+    </div>
+
+    <!-- Success Toast -->
+    <div class="success-toast" id="successToast">
+        ✅ Cambios guardados exitosamente
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
